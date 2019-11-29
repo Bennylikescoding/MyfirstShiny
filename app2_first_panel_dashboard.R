@@ -73,7 +73,10 @@ ui <- fluidPage(
                                       "Group_condition4" = "group_condition4",
                                       "Group_condition5" = "group_condition5",
                                       "Group_condition6" = "group_condition6",
-                                      "Assemble_group_name" = "assemble_group_name"), selected = "assemble_group_name")
+                                      "Assemble_group_name" = "assemble_group_name"), selected = "assemble_group_name"),
+           
+           sliderInput("pointsize", h4("Point size"),
+                       min = 0, max = 10, value = 9)
            
     ),
     column(10,
@@ -137,7 +140,7 @@ server <- function(input, output) {
     autoplot(prcomp(df_pca[,9:ncol(df_pca)]), data = df_pca,
              frame = TRUE, frame.type = 'norm',
              colour = input$groupselect,
-             label = TRUE, label.size = 5)
+             size = input$pointsize)
     
     
   })
