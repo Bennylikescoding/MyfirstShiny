@@ -65,16 +65,15 @@ ui <- fluidPage(
            tags$hr(),
            
            # Input: Select number of rows to display ----
-           radioButtons("group", "Group for analyze",
-                        choices = c(UniqueSampleName = "unique_Sample_name_uM",
-                                    Group_condition1 = "group_condition1",
-                                    Group_condition2 = "group_condition2",
-                                    Group_condition3 = "group_condition3",
-                                    Group_condition4 = "group_condition4",
-                                    Group_condition5 = "group_condition5",
-                                    Group_condition6 = "group_condition6",
-                                    Assemble_group_name = "assemble_group_name"),
-                        selected = "group_condition1")
+           selectInput("groupselect", h4("PCA Group for analyze"),
+                       choices = list("UniqueSampleName" = "unique_Sample_name",
+                                      "Group_condition1" = "group_condition1",
+                                      "Group_condition2" = "group_condition2",
+                                      "Group_condition3" = "group_condition3",
+                                      "Group_condition4" = "group_condition4",
+                                      "Group_condition5" = "group_condition5",
+                                      "Group_condition6" = "group_condition6",
+                                      "Assemble_group_name" = "assemble_group_name"), selected = "assemble_group_name")
            
     ),
     column(10,
@@ -137,7 +136,7 @@ server <- function(input, output) {
     
     autoplot(prcomp(df_pca[,9:ncol(df_pca)]), data = df_pca,
              frame = TRUE, frame.type = 'norm',
-             colour = input$group,
+             colour = input$groupselect,
              label = TRUE, label.size = 5)
     
     
