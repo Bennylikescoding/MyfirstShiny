@@ -65,7 +65,7 @@ ui <- fluidPage(
            tags$hr(),
            
            # Input: Select number of rows to display ----
-           selectInput("groupselect", h4("PCA Group for analyze"),
+           selectInput("groupselect", h4("PCA Group for visualize"),
                        choices = list("UniqueSampleName" = "unique_Sample_name",
                                       "Group_condition1" = "group_condition1",
                                       "Group_condition2" = "group_condition2",
@@ -76,7 +76,9 @@ ui <- fluidPage(
                                       "Assemble_group_name" = "assemble_group_name"), selected = "assemble_group_name"),
            
            sliderInput("pointsize", h4("Point size"),
-                       min = 0, max = 10, value = 9)
+                       min = 0, max = 10, value = 5),
+           
+           checkboxInput("eigenvector_checkbox", "Show eigenvectors", value = FALSE)
            
     ),
     column(10,
@@ -111,11 +113,14 @@ ui <- fluidPage(
            )
     )
 )
-
 # Define server logic to read selected file ----
 server <- function(input, output) {
   
+  observeEvent(input$groupselect,
+                 showNotification("Warning! Change group action has no effect on input data selection, it only changes color representation!", duration = NULL, type = "warning")
+    )
 
+  
   output$heatmap <- renderPlot({
     
     df <- read.csv(input$file1$datapath,
@@ -123,7 +128,7 @@ server <- function(input, output) {
                    sep = input$sep,
                    quote = input$quote)
     
-    rnames <- df[,1]
+    rnames <- df[,input$groupselect]
     df_graph <- as.matrix(df[,9:ncol(df)])
     rownames(df_graph) <- rnames
     
@@ -140,8 +145,9 @@ server <- function(input, output) {
     autoplot(prcomp(df_pca[,9:ncol(df_pca)]), data = df_pca,
              frame = TRUE, frame.type = 'norm',
              colour = input$groupselect,
+             loadings = input$eigenvector_checkbox, loadings.colour = 'blue',
+             loadings.label = input$eigenvector_checkbox, loadings.label.size = 3,
              size = input$pointsize)
-    
     
   })
   
