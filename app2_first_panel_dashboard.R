@@ -78,7 +78,8 @@ ui <- fluidPage(
            sliderInput("pointsize", h4("Point size"),
                        min = 0, max = 10, value = 5),
            
-           checkboxInput("eigenvector_checkbox", "Show eigenvectors", value = FALSE)
+           checkboxInput("eigenvector_checkbox", "Show eigenvectors", value = FALSE),
+           checkboxInput("ecllipse_checkbox", "Show ecllipse", value = FALSE)
            
     ),
     column(10,
@@ -143,7 +144,7 @@ server <- function(input, output) {
                        header = input$header)
     
     autoplot(prcomp(df_pca[,9:ncol(df_pca)]), data = df_pca,
-             frame = TRUE, frame.type = 'norm',
+             frame = input$ecllipse_checkbox, frame.type = 'norm',
              colour = input$groupselect,
              loadings = input$eigenvector_checkbox, loadings.colour = 'blue',
              loadings.label = input$eigenvector_checkbox, loadings.label.size = 3,
